@@ -243,9 +243,12 @@ def install_deployment_package(package_file):
     log("Installing deployment package...")
     
     try:
-        # Extract package
+        # Create installation directory
+        INSTALL_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Extract package to /opt/crowdsurfer
         with tarfile.open(package_file, 'r:gz') as tar:
-            tar.extractall(INSTALL_DIR.parent)
+            tar.extractall(INSTALL_DIR)
         
         log(f"✓ Extracted deployment package to {INSTALL_DIR}")
         
