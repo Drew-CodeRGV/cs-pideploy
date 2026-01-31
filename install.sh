@@ -258,18 +258,28 @@ def install_deployment_package(package_file):
         if install_script.exists():
             log("Running installation script...")
             
-            result = subprocess.run(
+            # Run installation script with extended timeout and real-time output
+            process = subprocess.Popen(
                 ['bash', str(install_script)],
                 cwd=str(INSTALL_DIR),
-                capture_output=True,
-                text=True
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
             )
             
-            if result.returncode == 0:
+            # Stream output in real-time
+            for line in process.stdout:
+                log(line.rstrip())
+            
+            # Wait for completion
+            return_code = process.wait()
+            
+            if return_code == 0:
                 log("✓ Installation completed successfully")
                 return True
             else:
-                log(f"✗ Installation failed: {result.stderr}")
+                log(f"✗ Installation failed with exit code: {return_code}")
                 return False
         else:
             log(f"✗ Installation script not found: {install_script}")
@@ -343,6 +353,7 @@ ExecStart=$BOOTSTRAP_DIR/venv/bin/python3 $BOOTSTRAP_DIR/bootstrap_agent.py
 StandardOutput=append:$LOG_DIR/bootstrap.log
 StandardError=append:$LOG_DIR/bootstrap.log
 RemainAfterExit=yes
+TimeoutStartSec=600
 
 [Install]
 WantedBy=multi-user.target
