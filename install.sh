@@ -384,8 +384,8 @@ echo -e "${YELLOW}Starting bootstrap agent...${NC}"
 # Start bootstrap agent
 systemctl start --no-block crowdsurfer-bootstrap
 
-# Wait a moment to ensure service started
-sleep 2
+# Wait for service to start
+sleep 5
 
 # Check if service started successfully
 if systemctl is-active --quiet crowdsurfer-bootstrap.service; then
