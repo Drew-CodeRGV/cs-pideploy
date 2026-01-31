@@ -195,7 +195,7 @@ def poll_for_authorization(serial_number):
             with open(config_file, 'w') as f:
                 json.dump(config_data, f, indent=2)
             
-            os.chmod(config_file, 0o600)
+            os.chmod(config_file, 0o644)
             
             log(f"✓ Device authorized! Token saved.")
             return token
