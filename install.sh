@@ -384,50 +384,40 @@ echo -e "${YELLOW}Starting bootstrap agent...${NC}"
 # Start bootstrap agent
 systemctl start crowdsurfer-bootstrap
 
-echo ""
-echo -e "${GREEN}✓ Bootstrap agent started${NC}"
-echo ""
-echo -e "${YELLOW}========================================${NC}"
-echo -e "${YELLOW}Waiting for Admin Authorization${NC}"
-echo -e "${YELLOW}========================================${NC}"
-echo ""
-echo "The device is now registering with the backend and waiting"
-echo "for an administrator to authorize it in the admin dashboard."
-echo ""
-echo "Monitoring progress (Ctrl+C to exit, agent continues in background)..."
-echo ""
+# Wait a moment to ensure service started
+sleep 2
 
-# Follow the log and show progress
-tail -f $LOG_DIR/bootstrap.log 2>/dev/null &
-TAIL_PID=$!
-
-# Wait a bit to see if bootstrap completes quickly
-sleep 60
-
-# Check if bootstrap is still running
+# Check if service started successfully
 if systemctl is-active --quiet crowdsurfer-bootstrap.service; then
     echo ""
+    echo -e "${GREEN}✓ Bootstrap agent started successfully${NC}"
+    echo ""
     echo -e "${YELLOW}========================================${NC}"
-    echo -e "${YELLOW}Still waiting for authorization...${NC}"
+    echo -e "${YELLOW}Device Registration in Progress${NC}"
     echo -e "${YELLOW}========================================${NC}"
     echo ""
-    echo "The bootstrap agent is still running in the background."
-    echo "It will automatically complete once authorized."
+    echo "The bootstrap agent is now running in the background."
     echo ""
-    echo "To continue monitoring: tail -f $LOG_DIR/bootstrap.log"
-    echo "To check status: systemctl status crowdsurfer-bootstrap"
+    echo "Next steps:"
+    echo "  1. The device is registering with the backend"
+    echo "  2. Authorize device ${DEVICE_SERIAL} in the admin dashboard"
+    echo "  3. Installation will complete automatically after authorization"
     echo ""
-    kill $TAIL_PID 2>/dev/null
+    echo "To monitor progress:"
+    echo "  ${CYAN}tail -f $LOG_DIR/bootstrap.log${NC}"
+    echo ""
+    echo "To check status:"
+    echo "  ${CYAN}systemctl status crowdsurfer-bootstrap${NC}"
+    echo ""
 else
-    # Bootstrap completed
-    kill $TAIL_PID 2>/dev/null
     echo ""
-    echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}✓ Provisioning Complete!${NC}"
-    echo -e "${GREEN}========================================${NC}"
+    echo -e "${RED}✗ Bootstrap agent failed to start${NC}"
     echo ""
-    echo "Edge services are now running:"
-    systemctl status crowdsurfer-telemetry --no-pager | head -3
-    systemctl status crowdsurfer-management --no-pager | head -3
+    echo "Check status with:"
+    echo "  systemctl status crowdsurfer-bootstrap"
     echo ""
+    echo "Check logs with:"
+    echo "  tail -f $LOG_DIR/bootstrap.log"
+    echo ""
+    exit 1
 fi
