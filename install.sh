@@ -9,7 +9,7 @@
 set -e
 
 # Script version
-VERSION="1.0.0"
+VERSION="1.0.1"
 
 # Colors for output
 RED='\033[0;31m'
@@ -104,7 +104,7 @@ if [ -f "$CONFIG_DIR/network.conf" ]; then
 fi
 
 if [ "$SKIP_NETWORK_CONFIG" = false ]; then
-    # Detect available network interfaces
+    # Detect available network interfaces (including down interfaces)
     echo -e "${BLUE}Detecting network interfaces...${NC}"
     INTERFACES=$(ip -o link show | awk -F': ' '{print $2}' | grep -v '^lo$' | grep -v '^docker' | grep -v '^veth')
     
@@ -115,7 +115,7 @@ if [ "$SKIP_NETWORK_CONFIG" = false ]; then
     
     # Display available interfaces with details
     echo ""
-    echo -e "${YELLOW}Available Network Interfaces:${NC}"
+    echo -e "${YELLOW}Available Network Interfaces (including down):${NC}"
     echo ""
     
     INTERFACE_ARRAY=()
@@ -140,10 +140,18 @@ if [ "$SKIP_NETWORK_CONFIG" = false ]; then
             TYPE="Other"
         fi
         
-        echo -e "${GREEN}[$INDEX]${NC} ${BLUE}$iface${NC} ($TYPE)"
+        # Color code based on state
+        if [ "$STATE" = "UP" ]; then
+            STATE_COLOR="${GREEN}"
+        elif [ "$STATE" = "DOWN" ]; then
+            STATE_COLOR="${RED}"
+        else
+            STATE_COLOR="${YELLOW}"
+        fi
+        
+        echo -e "${GREEN}[$INDEX]${NC} ${BLUE}$iface${NC} ($TYPE) - ${STATE_COLOR}$STATE${NC}"
         echo "    MAC: $MAC_ADDR"
         echo "    IP:  $IP_ADDR"
-        echo "    State: $STATE"
         echo ""
         
         ((INDEX++))
