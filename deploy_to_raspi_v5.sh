@@ -2,8 +2,8 @@
 #
 # CrowdSurfer Shaka Edge Device - Raspberry Pi Deployment Script v5
 #
-# Version: 5.0.0
-# Last Updated: 2026-01-28
+# Version: 5.0.1
+# Last Updated: 2026-02-01
 #
 # This script deploys the complete CrowdSurfer edge device software to a Raspberry Pi
 # with interactive network interface configuration.
@@ -17,7 +17,7 @@
 
 set -e  # Exit on error
 
-SCRIPT_VERSION="5.0.0"
+SCRIPT_VERSION="5.0.1"
 CS_PIDEPLOY_URL="https://raw.githubusercontent.com/Drew-CodeRGV/cs-pideploy/main"
 
 # Colors for output
