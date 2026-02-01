@@ -91,7 +91,7 @@ if [ -f "$CONFIG_DIR/network.conf" ]; then
     echo -e "${BLUE}Waiting 5 seconds... (press 'y' to reconfigure, any other key to skip)${NC}"
     echo ""
     
-    read -t 5 -n 1 -p "Reconfigure? (y/N): " RECONFIG_CHOICE || RECONFIG_CHOICE=""
+    read -t 5 -n 1 -p "Reconfigure? (y/N): " RECONFIG_CHOICE < /dev/tty || RECONFIG_CHOICE=""
     echo ""
     
     if [[ ! "$RECONFIG_CHOICE" =~ ^[Yy]$ ]]; then
@@ -154,7 +154,7 @@ if [ "$SKIP_NETWORK_CONFIG" = false ]; then
     echo -e "${BLUE}This interface connects to the internet (e.g., Starlink, Ethernet)${NC}"
     echo ""
     
-    read -t 5 -p "Enter number [1-${#INTERFACE_ARRAY[@]}] (auto-select in 5 seconds): " WAN_CHOICE || WAN_CHOICE=""
+    read -t 5 -p "Enter number [1-${#INTERFACE_ARRAY[@]}] (auto-select in 5 seconds): " WAN_CHOICE < /dev/tty || WAN_CHOICE=""
     
     if [ -z "$WAN_CHOICE" ]; then
         WAN_CHOICE=1
@@ -196,7 +196,7 @@ if [ "$SKIP_NETWORK_CONFIG" = false ]; then
         exit 1
     fi
     
-    read -t 5 -p "Enter number [1-${#LAN_OPTIONS[@]}] (auto-select in 5 seconds): " LAN_CHOICE || LAN_CHOICE=""
+    read -t 5 -p "Enter number [1-${#LAN_OPTIONS[@]}] (auto-select in 5 seconds): " LAN_CHOICE < /dev/tty || LAN_CHOICE=""
     
     if [ -z "$LAN_CHOICE" ]; then
         LAN_CHOICE=1
@@ -236,7 +236,7 @@ if [ "$SKIP_NETWORK_CONFIG" = false ]; then
     done
     echo ""
     
-    read -t 5 -p "Enter number [1-${#MGMT_OPTIONS[@]}] (auto-select WAN in 5 seconds): " MGMT_CHOICE || MGMT_CHOICE=""
+    read -t 5 -p "Enter number [1-${#MGMT_OPTIONS[@]}] (auto-select WAN in 5 seconds): " MGMT_CHOICE < /dev/tty || MGMT_CHOICE=""
     
     if [ -z "$MGMT_CHOICE" ]; then
         MGMT_CHOICE=1
