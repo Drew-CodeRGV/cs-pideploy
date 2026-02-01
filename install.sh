@@ -74,7 +74,210 @@ mkdir -p "$BOOTSTRAP_DIR"
 mkdir -p "$CONFIG_DIR"
 mkdir -p "$LOG_DIR"
 
-echo -e "${GREEN}Step 3: Creating bootstrap agent...${NC}"
+# Network Interface Configuration
+echo ""
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN}Step 3: Network Interface Configuration${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo ""
+
+# Check if network configuration already exists
+SKIP_NETWORK_CONFIG=false
+if [ -f "$CONFIG_DIR/network.conf" ]; then
+    echo -e "${YELLOW}Existing network configuration found:${NC}"
+    cat "$CONFIG_DIR/network.conf" | grep -E "^(WAN|LAN|MGMT)_INTERFACE" | sed 's/^/  /'
+    echo ""
+    echo -e "${YELLOW}Do you want to reconfigure network interfaces?${NC}"
+    echo -e "${BLUE}Waiting 5 seconds... (press 'y' to reconfigure, any other key to skip)${NC}"
+    echo ""
+    
+    read -t 5 -n 1 -p "Reconfigure? (y/N): " RECONFIG_CHOICE || RECONFIG_CHOICE=""
+    echo ""
+    
+    if [[ ! "$RECONFIG_CHOICE" =~ ^[Yy]$ ]]; then
+        echo -e "${GREEN}✓ Using existing network configuration${NC}"
+        SKIP_NETWORK_CONFIG=true
+    else
+        echo -e "${BLUE}Reconfiguring network interfaces...${NC}"
+    fi
+    echo ""
+fi
+
+if [ "$SKIP_NETWORK_CONFIG" = false ]; then
+    # Detect available network interfaces
+    echo -e "${BLUE}Detecting network interfaces...${NC}"
+    INTERFACES=$(ip -o link show | awk -F': ' '{print $2}' | grep -v '^lo$' | grep -v '^docker' | grep -v '^veth')
+    
+    if [ -z "$INTERFACES" ]; then
+        echo -e "${RED}Error: No network interfaces found${NC}"
+        exit 1
+    fi
+    
+    # Display available interfaces with details
+    echo ""
+    echo -e "${YELLOW}Available Network Interfaces:${NC}"
+    echo ""
+    
+    INTERFACE_ARRAY=()
+    INDEX=1
+    
+    while IFS= read -r iface; do
+        INTERFACE_ARRAY+=("$iface")
+        
+        # Get interface details
+        IP_ADDR=$(ip -4 addr show "$iface" 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' || echo "No IP")
+        MAC_ADDR=$(ip link show "$iface" 2>/dev/null | grep -oP '(?<=link/ether\s)[0-9a-f:]+' || echo "N/A")
+        STATE=$(ip link show "$iface" 2>/dev/null | grep -oP '(?<=state\s)\w+' || echo "UNKNOWN")
+        
+        # Determine interface type
+        if [[ "$iface" == eth* ]]; then
+            TYPE="Ethernet"
+        elif [[ "$iface" == wlan* ]]; then
+            TYPE="WiFi"
+        elif [[ "$iface" == usb* ]]; then
+            TYPE="USB"
+        else
+            TYPE="Other"
+        fi
+        
+        echo -e "${GREEN}[$INDEX]${NC} ${BLUE}$iface${NC} ($TYPE)"
+        echo "    MAC: $MAC_ADDR"
+        echo "    IP:  $IP_ADDR"
+        echo "    State: $STATE"
+        echo ""
+        
+        ((INDEX++))
+    done <<< "$INTERFACES"
+    
+    # Prompt for WAN interface
+    echo -e "${YELLOW}Select WAN (Internet) Interface:${NC}"
+    echo -e "${BLUE}This interface connects to the internet (e.g., Starlink, Ethernet)${NC}"
+    echo ""
+    
+    read -t 5 -p "Enter number [1-${#INTERFACE_ARRAY[@]}] (auto-select in 5 seconds): " WAN_CHOICE || WAN_CHOICE=""
+    
+    if [ -z "$WAN_CHOICE" ]; then
+        WAN_CHOICE=1
+        echo ""
+        echo -e "${YELLOW}⏱ Timeout - Auto-selected: ${INTERFACE_ARRAY[0]}${NC}"
+    else
+        echo ""
+    fi
+    
+    # Validate WAN choice
+    if ! [[ "$WAN_CHOICE" =~ ^[0-9]+$ ]] || [ "$WAN_CHOICE" -lt 1 ] || [ "$WAN_CHOICE" -gt "${#INTERFACE_ARRAY[@]}" ]; then
+        echo -e "${RED}Invalid selection. Using default: ${INTERFACE_ARRAY[0]}${NC}"
+        WAN_CHOICE=1
+    fi
+    
+    WAN_INTERFACE="${INTERFACE_ARRAY[$((WAN_CHOICE-1))]}"
+    echo -e "${GREEN}✓ WAN Interface: $WAN_INTERFACE${NC}"
+    echo ""
+    
+    # Prompt for LAN interface
+    echo -e "${YELLOW}Select LAN (Guest Access) Interface:${NC}"
+    echo -e "${BLUE}This interface will host the WiFi access point for attendees${NC}"
+    echo ""
+    
+    # Filter out WAN interface from options
+    LAN_OPTIONS=()
+    LAN_INDEX=1
+    for iface in "${INTERFACE_ARRAY[@]}"; do
+        if [ "$iface" != "$WAN_INTERFACE" ]; then
+            LAN_OPTIONS+=("$iface")
+            echo -e "${GREEN}[$LAN_INDEX]${NC} ${BLUE}$iface${NC}"
+            ((LAN_INDEX++))
+        fi
+    done
+    echo ""
+    
+    if [ ${#LAN_OPTIONS[@]} -eq 0 ]; then
+        echo -e "${RED}Error: No available interfaces for LAN (all assigned to WAN)${NC}"
+        exit 1
+    fi
+    
+    read -t 5 -p "Enter number [1-${#LAN_OPTIONS[@]}] (auto-select in 5 seconds): " LAN_CHOICE || LAN_CHOICE=""
+    
+    if [ -z "$LAN_CHOICE" ]; then
+        LAN_CHOICE=1
+        echo ""
+        echo -e "${YELLOW}⏱ Timeout - Auto-selected: ${LAN_OPTIONS[0]}${NC}"
+    else
+        echo ""
+    fi
+    
+    # Validate LAN choice
+    if ! [[ "$LAN_CHOICE" =~ ^[0-9]+$ ]] || [ "$LAN_CHOICE" -lt 1 ] || [ "$LAN_CHOICE" -gt "${#LAN_OPTIONS[@]}" ]; then
+        echo -e "${RED}Invalid selection. Using default: ${LAN_OPTIONS[0]}${NC}"
+        LAN_CHOICE=1
+    fi
+    
+    LAN_INTERFACE="${LAN_OPTIONS[$((LAN_CHOICE-1))]}"
+    echo -e "${GREEN}✓ LAN Interface: $LAN_INTERFACE${NC}"
+    echo ""
+    
+    # Prompt for Management interface (optional)
+    echo -e "${YELLOW}Select Management Interface (optional):${NC}"
+    echo -e "${BLUE}This interface is for SSH/admin access (can be same as WAN)${NC}"
+    echo ""
+    
+    # Filter out WAN and LAN interfaces from options
+    MGMT_OPTIONS=("$WAN_INTERFACE")  # WAN is always an option for management
+    MGMT_INDEX=1
+    echo -e "${GREEN}[$MGMT_INDEX]${NC} ${BLUE}$WAN_INTERFACE${NC} (same as WAN)"
+    ((MGMT_INDEX++))
+    
+    for iface in "${INTERFACE_ARRAY[@]}"; do
+        if [ "$iface" != "$WAN_INTERFACE" ] && [ "$iface" != "$LAN_INTERFACE" ]; then
+            MGMT_OPTIONS+=("$iface")
+            echo -e "${GREEN}[$MGMT_INDEX]${NC} ${BLUE}$iface${NC}"
+            ((MGMT_INDEX++))
+        fi
+    done
+    echo ""
+    
+    read -t 5 -p "Enter number [1-${#MGMT_OPTIONS[@]}] (auto-select WAN in 5 seconds): " MGMT_CHOICE || MGMT_CHOICE=""
+    
+    if [ -z "$MGMT_CHOICE" ]; then
+        MGMT_CHOICE=1
+        echo ""
+        echo -e "${YELLOW}⏱ Timeout - Auto-selected: ${MGMT_OPTIONS[0]} (same as WAN)${NC}"
+    else
+        echo ""
+    fi
+    
+    # Validate Management choice
+    if ! [[ "$MGMT_CHOICE" =~ ^[0-9]+$ ]] || [ "$MGMT_CHOICE" -lt 1 ] || [ "$MGMT_CHOICE" -gt "${#MGMT_OPTIONS[@]}" ]; then
+        echo -e "${RED}Invalid selection. Using default: ${MGMT_OPTIONS[0]}${NC}"
+        MGMT_CHOICE=1
+    fi
+    
+    MGMT_INTERFACE="${MGMT_OPTIONS[$((MGMT_CHOICE-1))]}"
+    echo -e "${GREEN}✓ Management Interface: $MGMT_INTERFACE${NC}"
+    echo ""
+    
+    # Save network configuration
+    echo -e "${BLUE}Saving network configuration...${NC}"
+    cat > "$CONFIG_DIR/network.conf" <<NETCONF
+# CrowdSurfer Network Configuration
+# Generated: $(date)
+
+WAN_INTERFACE=$WAN_INTERFACE
+LAN_INTERFACE=$LAN_INTERFACE
+MGMT_INTERFACE=$MGMT_INTERFACE
+NETCONF
+    
+    chmod 644 "$CONFIG_DIR/network.conf"
+    echo -e "${GREEN}✓ Network configuration saved to $CONFIG_DIR/network.conf${NC}"
+    echo ""
+else
+    # Load existing configuration
+    source "$CONFIG_DIR/network.conf"
+    echo -e "${GREEN}✓ Loaded existing network configuration${NC}"
+    echo ""
+fi
+
+echo -e "${GREEN}Step 4: Creating bootstrap agent...${NC}"
 
 # Create minimal Python bootstrap agent
 cat > "$BOOTSTRAP_DIR/bootstrap_agent.py" <<'PYTHON_SCRIPT'
@@ -332,14 +535,14 @@ PYTHON_SCRIPT
 
 chmod +x "$BOOTSTRAP_DIR/bootstrap_agent.py"
 
-echo -e "${GREEN}Step 4: Creating Python virtual environment...${NC}"
+echo -e "${GREEN}Step 5: Creating Python virtual environment...${NC}"
 cd "$BOOTSTRAP_DIR"
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install requests
 
-echo -e "${GREEN}Step 5: Creating systemd service...${NC}"
+echo -e "${GREEN}Step 6: Creating systemd service...${NC}"
 
 cat > /etc/systemd/system/crowdsurfer-bootstrap.service <<EOF
 [Unit]
