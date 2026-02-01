@@ -2,7 +2,7 @@
 #
 # CrowdSurfer Shaka Edge Device - Raspberry Pi Deployment Script v5
 #
-# Version: 5.0.1
+# Version: 5.0.2
 # Last Updated: 2026-02-01
 #
 # This script deploys the complete CrowdSurfer edge device software to a Raspberry Pi
@@ -17,7 +17,7 @@
 
 set -e  # Exit on error
 
-SCRIPT_VERSION="5.0.1"
+SCRIPT_VERSION="5.0.2"
 CS_PIDEPLOY_URL="https://raw.githubusercontent.com/Drew-CodeRGV/cs-pideploy/main"
 
 # Colors for output
@@ -300,15 +300,15 @@ select_interface() {
     local selected=""
     
     while true; do
-        echo ""
-        echo ""
-        list_interfaces_with_status
+        echo "" >&2
+        echo "" >&2
+        list_interfaces_with_status >&2
         
-        echo -e "${YELLOW}${prompt}${NC}"
+        echo -e "${YELLOW}${prompt}${NC}" >&2
         if [ -n "$default" ]; then
-            echo "Press Enter for default: ${default}"
+            echo "Press Enter for default: ${default}" >&2
         fi
-        echo ""
+        echo "" >&2
         read -p "Enter interface name (e.g., eth0) or number (e.g., 1): " selected
         
         # Use default if empty
@@ -333,22 +333,22 @@ select_interface() {
         if [ -e "/sys/class/net/$selected" ]; then
             # Try to bring interface UP if it's DOWN
             if ! ip link show "$selected" | grep -q "state UP"; then
-                print_info "Interface $selected is DOWN. Bringing it UP..."
+                print_info "Interface $selected is DOWN. Bringing it UP..." >&2
                 ip link set "$selected" up 2>/dev/null || true
                 sleep 1
             fi
-            echo ""
-            print_success "Selected: $selected"
-            echo ""
+            echo "" >&2
+            print_success "Selected: $selected" >&2
+            echo "" >&2
             echo "$selected"
             return 0
         else
             # Allow hardcoding interfaces that don't exist yet (e.g., wlan1 before driver install)
-            print_warning "Interface '$selected' not found, but will be configured anyway."
-            print_info "Make sure to install required drivers after deployment."
-            echo ""
-            print_success "Selected: $selected (will be configured when available)"
-            echo ""
+            print_warning "Interface '$selected' not found, but will be configured anyway." >&2
+            print_info "Make sure to install required drivers after deployment." >&2
+            echo "" >&2
+            print_success "Selected: $selected (will be configured when available)" >&2
+            echo "" >&2
             echo "$selected"
             return 0
         fi
@@ -360,21 +360,21 @@ select_client_interface() {
     local prompt="$1"
     local selected=""
     
-    echo ""
-    echo ""
-    list_interfaces_with_status
+    echo "" >&2
+    echo "" >&2
+    list_interfaces_with_status >&2
     
-    echo -e "${YELLOW}${prompt}${NC}"
-    echo ""
-    echo "Note: You can type 'wlan1' even if it doesn't exist yet!"
-    echo "      (Install the USB WiFi driver after deployment)"
-    echo ""
+    echo -e "${YELLOW}${prompt}${NC}" >&2
+    echo "" >&2
+    echo "Note: You can type 'wlan1' even if it doesn't exist yet!" >&2
+    echo "      (Install the USB WiFi driver after deployment)" >&2
+    echo "" >&2
     read -p "Enter interface name (e.g., wlan1) or number, or type 'none' to skip: " selected
     
     if [ "$selected" = "none" ] || [ -z "$selected" ]; then
-        echo ""
-        print_info "No client interface selected (management only mode)"
-        echo ""
+        echo "" >&2
+        print_info "No client interface selected (management only mode)" >&2
+        echo "" >&2
         return 0
     fi
     
@@ -395,20 +395,20 @@ select_client_interface() {
     if [ -e "/sys/class/net/$selected" ]; then
         # Try to bring interface UP if it's DOWN
         if ! ip link show "$selected" | grep -q "state UP"; then
-            print_info "Interface $selected is DOWN. Bringing it UP..."
+            print_info "Interface $selected is DOWN. Bringing it UP..." >&2
             ip link set "$selected" up 2>/dev/null || true
             sleep 1
         fi
-        echo ""
-        print_success "Selected: $selected"
-        echo ""
+        echo "" >&2
+        print_success "Selected: $selected" >&2
+        echo "" >&2
     else
         # Allow hardcoding interfaces that don't exist yet (e.g., wlan1 before driver install)
-        print_warning "Interface '$selected' not found, but will be configured anyway."
-        print_info "Make sure to install required drivers after deployment."
-        echo ""
-        print_success "Selected: $selected (will be configured when available)"
-        echo ""
+        print_warning "Interface '$selected' not found, but will be configured anyway." >&2
+        print_info "Make sure to install required drivers after deployment." >&2
+        echo "" >&2
+        print_success "Selected: $selected (will be configured when available)" >&2
+        echo "" >&2
     fi
     
     echo "$selected"
