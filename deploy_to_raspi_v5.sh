@@ -3,7 +3,7 @@
 # CrowdSurfer Shaka Edge Device - Raspberry Pi Deployment Script v5
 #
 # Version: 5.0.0
-# Last Updated: 2026-02-01
+# Last Updated: 2026-01-28
 #
 # This script deploys the complete CrowdSurfer edge device software to a Raspberry Pi
 # with interactive network interface configuration.
@@ -96,10 +96,9 @@ print_info() {
     echo -e "${CYAN}ℹ $1${NC}"
 }
 
-
 # Function to download file from cs-pideploy
 download_file() {
-    local filename="# Function to detect and install USB WiFi adapter drivers"
+    local filename="$1"
     local dest_path="$2"
     local url="${CS_PIDEPLOY_URL}/${filename}"
     
@@ -112,6 +111,7 @@ download_file() {
         return 1
     fi
 }
+
 # Function to detect and install USB WiFi adapter drivers
 detect_and_install_wifi_drivers() {
     print_header "Detecting USB WiFi Adapters"
@@ -591,7 +591,6 @@ else
     mkdir -p "$INSTALL_DIR/edge"
 fi
 
-# Copy edge files from script directory if they exist
 # Copy edge files from script directory if they exist, or download from cs-pideploy
 EDGE_FILES=(
     "management_agent.py"
