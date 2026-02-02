@@ -9,15 +9,15 @@
 # with interactive network interface configuration.
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/Drew-CodeRGV/CrowdSurfer/master/edge/deploy_to_raspi_v5.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/Drew-CodeRGV/CrowdSurfer/master/edge/deploy_to_raspi_v4.sh | sudo bash
 #
 # Or manually:
-#   sudo bash deploy_to_raspi_v5.sh
+#   sudo bash deploy_to_raspi_v4.sh
 #
 
 set -e  # Exit on error
 
-SCRIPT_VERSION="5.0.2"
+SCRIPT_VERSION="5.0.0"
 CS_PIDEPLOY_URL="https://raw.githubusercontent.com/Drew-CodeRGV/cs-pideploy/main"
 
 # Colors for output
@@ -300,7 +300,15 @@ select_interface() {
     local selected=""
     
     while true; do
-        echo "" >&2        echo "" >&2        list_interfaces_with_status >&2                echo -e "${YELLOW}${prompt}${NC}" >&2        if [ -n "$default" ]; then            echo "Press Enter for default: ${default}" >&2        fi        echo "" >&2
+        echo "" >&2
+        echo "" >&2
+        list_interfaces_with_status >&2
+        
+        echo -e "${YELLOW}${prompt}${NC}" >&2
+        if [ -n "$default" ]; then
+            echo "Press Enter for default: ${default}" >&2
+        fi
+        echo "" >&2
         read -p "Enter interface name (e.g., eth0) or number (e.g., 1): " selected
         
         # Use default if empty
@@ -329,16 +337,18 @@ select_interface() {
                 ip link set "$selected" up 2>/dev/null || true
                 sleep 1
             fi
-            echo "" >&2            print_success "Selected: $selected" >&2            echo "" >&2
+            echo "" >&2
+            print_success "Selected: $selected" >&2
+            echo "" >&2
             echo "$selected"
             return 0
         else
             # Allow hardcoding interfaces that don't exist yet (e.g., wlan1 before driver install)
             print_warning "Interface '$selected' not found, but will be configured anyway." >&2
             print_info "Make sure to install required drivers after deployment." >&2
-            echo ""
+            echo "" >&2
             print_success "Selected: $selected (will be configured when available)" >&2
-            echo ""
+            echo "" >&2
             echo "$selected"
             return 0
         fi
@@ -346,10 +356,25 @@ select_interface() {
 }
 
 # Function to select client interface with improved UX
-select_client_interface() {    local prompt="    "    local selected=""        echo "" >&2    echo "" >&2    list_interfaces_with_status >&2        echo -e "${YELLOW}${prompt}${NC}" >&2    echo "" >&2    echo "Note: You can type 'wlan1' even if it doesn't exist yet!" >&2    echo "      (Install the USB WiFi driver after deployment)" >&2    echo "" >&2
+select_client_interface() {
+    local prompt="$1"
+    local selected=""
+    
+    echo "" >&2
+    echo "" >&2
+    list_interfaces_with_status >&2
+    
+    echo -e "${YELLOW}${prompt}${NC}" >&2
+    echo "" >&2
+    echo "Note: You can type 'wlan1' even if it doesn't exist yet!" >&2
+    echo "      (Install the USB WiFi driver after deployment)" >&2
+    echo "" >&2
     read -p "Enter interface name (e.g., wlan1) or number, or type 'none' to skip: " selected
     
-    if [ "$selected" = "none" ] || [ -z "$selected" ]; then        echo "" >&2        print_info "No client interface selected (management only mode)" >&2        echo "" >&2
+    if [ "$selected" = "none" ] || [ -z "$selected" ]; then
+        echo "" >&2
+        print_info "No client interface selected (management only mode)" >&2
+        echo "" >&2
         return 0
     fi
     
@@ -374,14 +399,16 @@ select_client_interface() {    local prompt="    "    local selected=""        e
             ip link set "$selected" up 2>/dev/null || true
             sleep 1
         fi
-        echo "" >&2        print_success "Selected: $selected" >&2        echo "" >&2
+        echo "" >&2
+        print_success "Selected: $selected" >&2
+        echo "" >&2
     else
         # Allow hardcoding interfaces that don't exist yet (e.g., wlan1 before driver install)
         print_warning "Interface '$selected' not found, but will be configured anyway." >&2
         print_info "Make sure to install required drivers after deployment." >&2
-        echo ""
+        echo "" >&2
         print_success "Selected: $selected (will be configured when available)" >&2
-        echo ""
+        echo "" >&2
     fi
     
     echo "$selected"
@@ -404,7 +431,7 @@ if [ ! -f /proc/cpuinfo ] || ! grep -q "Raspberry Pi" /proc/cpuinfo; then
     fi
 fi
 
-print_header "CrowdSurfer Shaka Edge Device Deployment v5"
+print_header "CrowdSurfer Shaka Edge Device Deployment v2"
 echo "This script will install and configure the CrowdSurfer edge device software"
 echo "with interactive network interface configuration."
 echo ""
@@ -987,7 +1014,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Re-run the deployment script's network configuration section
-bash /opt/crowdsurfer/edge/deploy_to_raspi_v5.sh
+bash /opt/crowdsurfer/edge/deploy_to_raspi_v4.sh
 EOF
 chmod +x /usr/local/bin/crowdsurfer-reconfigure-network
 
