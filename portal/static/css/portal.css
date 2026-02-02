@@ -1,0 +1,574 @@
+/* 
+ * CrowdSurfer Captive Portal Styles
+ * Mobile-first responsive design
+ */
+
+/* ===== CSS Reset & Base Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* ===== Container ===== */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* ===== Event Header ===== */
+.event-header {
+    width: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.event-header-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+/* ===== Candidate Section ===== */
+.candidate-section {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem;
+    background: linear-gradient(to bottom, #f8f9fa 0%, white 100%);
+}
+
+.candidate-photo-container {
+    margin: 0 auto 1rem;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.candidate-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.candidate-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.candidate-slogan {
+    font-size: 1.1rem;
+    color: #667eea;
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* ===== Event Details ===== */
+.event-details {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.event-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.event-description {
+    font-size: 1rem;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+/* ===== Form Container ===== */
+.form-container {
+    padding: 2rem 1.5rem;
+}
+
+.form-container h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.form-intro {
+    color: #718096;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* ===== Form Styles ===== */
+.registration-form,
+.survey-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.required {
+    color: #e53e3e;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: white;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+input[type="text"].error,
+input[type="email"].error,
+input[type="tel"].error,
+input[type="date"].error,
+textarea.error {
+    border-color: #e53e3e;
+}
+
+.field-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 0.25rem;
+}
+
+.field-error {
+    display: block;
+    font-size: 0.85rem;
+    color: #e53e3e;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* ===== Checkbox Styles ===== */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 0.2rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checkbox-label {
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+/* ===== Radio Button Styles ===== */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.radio-option:hover {
+    border-color: #cbd5e0;
+    background: #f7fafc;
+}
+
+.radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.radio-option label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.radio-option.selected {
+    border-color: #667eea;
+    background: #eef2ff;
+}
+
+/* ===== Raffle Section ===== */
+.raffle-section {
+    background: #fef5e7;
+    border: 2px solid #f39c12;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.raffle-prize {
+    font-size: 0.9rem;
+    color: #7d6608;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+/* ===== Button Styles ===== */
+.btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== Loading State ===== */
+.loading {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    border: 4px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading p {
+    color: #718096;
+    font-weight: 500;
+}
+
+/* ===== Error Messages ===== */
+.form-errors {
+    background: #fff5f5;
+    border: 2px solid #fc8181;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-errors ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.form-errors li {
+    color: #c53030;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-errors li:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== Survey Specific Styles ===== */
+.survey-header {
+    text-align: center;
+    padding: 2rem 1.5rem 1rem;
+    background: linear-gradient(to bottom, #f8f9fa 0%, white 100%);
+}
+
+.survey-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.survey-intro {
+    color: #718096;
+    font-size: 1rem;
+}
+
+.survey-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.survey-question {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.survey-question:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.question-optional {
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* ===== Textarea Styles ===== */
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 0.25rem;
+}
+
+.char-counter.warning {
+    color: #d69e2e;
+}
+
+.char-counter.error {
+    color: #e53e3e;
+}
+
+/* ===== Success Message ===== */
+.success-message {
+    text-align: center;
+    padding: 3rem 1.5rem;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: #48bb78;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.success-message h3 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.success-message p {
+    color: #718096;
+    font-size: 1rem;
+}
+
+/* ===== No Questions Message ===== */
+.no-questions {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.no-questions p {
+    font-size: 1.1rem;
+    color: #718096;
+}
+
+/* ===== Footer ===== */
+.footer {
+    padding: 1.5rem;
+    text-align: center;
+    background: #f7fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.privacy-note {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* ===== Responsive Design ===== */
+
+/* Tablets and larger */
+@media (min-width: 768px) {
+    body {
+        padding: 2rem;
+    }
+
+    .candidate-photo-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .candidate-name {
+        font-size: 2rem;
+    }
+
+    .candidate-slogan {
+        font-size: 1.25rem;
+    }
+
+    .form-container {
+        padding: 2.5rem 2rem;
+    }
+
+    .radio-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .radio-option {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 700px;
+    }
+
+    .form-container h3 {
+        font-size: 1.75rem;
+    }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    body {
+        background: white;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    .btn,
+    .loading {
+        display: none;
+    }
+}
+
+/* ===== Accessibility ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn-primary {
+        border: 2px solid currentColor;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    textarea {
+        border-width: 3px;
+    }
+}

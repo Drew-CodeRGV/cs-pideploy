@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/portal/static/css/portal.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Event Header Image -->
+        <div id="event-header" class="event-header">
+            <img id="event-header-image" src="" alt="Event Header" class="event-header-image">
+        </div>
+
+        <!-- Candidate Section -->
+        <div class="candidate-section">
+            <div id="candidate-photo-container" class="candidate-photo-container">
+                <img id="candidate-photo" src="" alt="Candidate" class="candidate-photo">
+            </div>
+            <h1 id="candidate-name" class="candidate-name"></h1>
+            <p id="candidate-slogan" class="candidate-slogan"></p>
+        </div>
+
+        <!-- Event Details -->
+        <div class="event-details">
+            <h2 id="event-name" class="event-name"></h2>
+            <p id="event-details" class="event-description"></p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-container">
+            <h3>Connect to WiFi</h3>
+            <p class="form-intro">Please provide your information to access the internet.</p>
+
+            <form id="registration-form" class="registration-form">
+                <!-- Error Messages -->
+                <div id="form-errors" class="form-errors" style="display: none;"></div>
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="first-name">First Name <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="first-name" 
+                        name="first_name" 
+                        required 
+                        maxlength="100"
+                        autocomplete="given-name"
+                    >
+                    <span class="field-error" id="first-name-error"></span>
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="last-name">Last Name <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="last-name" 
+                        name="last_name" 
+                        required 
+                        maxlength="100"
+                        autocomplete="family-name"
+                    >
+                    <span class="field-error" id="last-name-error"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        maxlength="255"
+                        autocomplete="email"
+                    >
+                    <span class="field-error" id="email-error"></span>
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        required 
+                        pattern="[0-9]{10}"
+                        placeholder="5125551234"
+                        maxlength="10"
+                        autocomplete="tel"
+                    >
+                    <span class="field-error" id="phone-error"></span>
+                    <small class="field-hint">10 digits, no spaces or dashes</small>
+                </div>
+
+                <!-- Zip Code -->
+                <div class="form-group">
+                    <label for="zip">Zip Code <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="zip" 
+                        name="zip" 
+                        required 
+                        pattern="[0-9]{5}"
+                        placeholder="78701"
+                        maxlength="5"
+                        autocomplete="postal-code"
+                    >
+                    <span class="field-error" id="zip-error"></span>
+                    <small class="field-hint">5 digits</small>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="form-group">
+                    <label for="dob">Date of Birth <span class="required">*</span></label>
+                    <input 
+                        type="date" 
+                        id="dob" 
+                        name="dob" 
+                        required
+                        autocomplete="bday"
+                    >
+                    <span class="field-error" id="dob-error"></span>
+                </div>
+
+                <!-- Raffle Opt-In (conditional) -->
+                <div id="raffle-section" class="form-group raffle-section" style="display: none;">
+                    <div class="checkbox-group">
+                        <input 
+                            type="checkbox" 
+                            id="raffle-opt-in" 
+                            name="raffle_opt_in"
+                        >
+                        <label for="raffle-opt-in" class="checkbox-label">
+                            <span id="raffle-text">Enter me in the raffle</span>
+                        </label>
+                    </div>
+                    <p id="raffle-prize" class="raffle-prize"></p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    Connect
+                </button>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Connecting...</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="privacy-note">Your information will be kept private and secure.</p>
+        </div>
+    </div>
+
+    <script src="/portal/static/js/portal.js"></script>
+    <script>
+        // Initialize splash page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSplashPage();
+        });
+    </script>
+</body>
+</html>

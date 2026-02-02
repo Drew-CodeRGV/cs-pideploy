@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Survey</title>
+    <link rel="stylesheet" href="/portal/static/css/portal.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Survey Header -->
+        <div class="survey-header">
+            <h2>How about a few quick questions?</h2>
+            <p class="survey-intro">Your feedback helps us serve you better. All questions are optional.</p>
+        </div>
+
+        <!-- Survey Form -->
+        <div class="form-container">
+            <form id="survey-form" class="survey-form">
+                <!-- Error Messages -->
+                <div id="form-errors" class="form-errors" style="display: none;"></div>
+
+                <!-- Survey Questions Container (dynamically populated) -->
+                <div id="survey-questions" class="survey-questions">
+                    <!-- Questions will be rendered here by JavaScript -->
+                </div>
+
+                <!-- No Questions Message -->
+                <div id="no-questions" class="no-questions" style="display: none;">
+                    <p>Thank you for connecting! You're all set.</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    Exit
+                </button>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Submitting...</p>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="success-message" class="success-message" style="display: none;">
+                <div class="success-icon">✓</div>
+                <h3>Thank you for your feedback!</h3>
+                <p>You can now close this window and enjoy the internet.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="privacy-note">Your responses are confidential and help us improve our events.</p>
+        </div>
+    </div>
+
+    <script src="/portal/static/js/portal.js"></script>
+    <script>
+        // Initialize survey page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSurveyPage();
+        });
+    </script>
+</body>
+</html>
