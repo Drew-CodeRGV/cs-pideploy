@@ -17,7 +17,7 @@
 
 set -e  # Exit on error
 
-SCRIPT_VERSION="5.0.0"
+SCRIPT_VERSION="5.0.2"
 CS_PIDEPLOY_URL="https://raw.githubusercontent.com/Drew-CodeRGV/cs-pideploy/main"
 
 # Colors for output
