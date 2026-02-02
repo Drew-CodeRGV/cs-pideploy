@@ -9,11 +9,11 @@ PartOf=crowdsurfer.target
 Type=simple
 User=crowdsurfer
 Group=crowdsurfer
-WorkingDirectory=/opt/crowdsurfer/portal
+WorkingDirectory=/opt/crowdsurfer/edge/portal
 Environment="PYTHONUNBUFFERED=1"
 Environment="FLASK_APP=portal_server.py"
 Environment="FLASK_ENV=production"
-ExecStart=/opt/crowdsurfer/venv/bin/python /opt/crowdsurfer/portal/portal_server.py
+ExecStart=/opt/crowdsurfer/edge/venv/bin/python /opt/crowdsurfer/edge/portal/portal_server.py
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -25,8 +25,8 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/crowdsurfer/portal/data
-ReadOnlyPaths=/opt/crowdsurfer/portal
+ReadWritePaths=/var/lib/crowdsurfer
+ReadOnlyPaths=/opt/crowdsurfer/edge/portal
 
 # Resource limits
 LimitNOFILE=4096
