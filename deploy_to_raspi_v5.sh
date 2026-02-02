@@ -9,10 +9,10 @@
 # with interactive network interface configuration.
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/Drew-CodeRGV/CrowdSurfer/master/edge/deploy_to_raspi_v4.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/Drew-CodeRGV/CrowdSurfer/master/edge/deploy_to_raspi_v5.sh | sudo bash
 #
 # Or manually:
-#   sudo bash deploy_to_raspi_v4.sh
+#   sudo bash deploy_to_raspi_v5.sh
 #
 
 set -e  # Exit on error
@@ -1014,7 +1014,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Re-run the deployment script's network configuration section
-bash /opt/crowdsurfer/edge/deploy_to_raspi_v4.sh
+bash /opt/crowdsurfer/edge/deploy_to_raspi_v5.sh
 EOF
 chmod +x /usr/local/bin/crowdsurfer-reconfigure-network
 
