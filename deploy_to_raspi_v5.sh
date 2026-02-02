@@ -431,7 +431,7 @@ if [ ! -f /proc/cpuinfo ] || ! grep -q "Raspberry Pi" /proc/cpuinfo; then
     fi
 fi
 
-print_header "CrowdSurfer Shaka Edge Device Deployment v5"
+print_header "CrowdSurfer Shaka Edge Device Deployment v${SCRIPT_VERSION}"
 echo "This script will install and configure the CrowdSurfer edge device software"
 echo "with interactive network interface configuration."
 echo ""
